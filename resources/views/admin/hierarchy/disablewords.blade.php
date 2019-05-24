@@ -1,0 +1,145 @@
+@extends('layouts.backend.app')
+
+@section('title', 'Hierarchy')
+
+@push('css')
+     <!-- JQuery DataTable Css -->
+     <link href="{{ asset('assets/backend/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css') }}" rel="stylesheet">
+
+@endpush
+
+@section('content')
+<div class="container-fluid">
+
+    <!-- Exportable Table -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        DISABLED WORDS
+                        <span class="badge bg-blue">{{ $thesauruses->count() }}</span>
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>ID</th>
+                                    <th>MT</th>
+                                    <th>SN</th>
+                                    <th>UF</th>
+                                    <th>USE</th>                      
+                                    <th>BT</th>
+                                    <th>NT</th>
+                                    <th>IT</th>
+                                    <th>SO</th>            
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>ID</th>
+                                    <th>MT</th>
+                                    <th>SN</th>
+                                    <th>UF</th>
+                                    <th>USE</th>
+                                    <th>BT</th>
+                                    <th>NT</th>
+                                    <th>IT</th>
+                                    <th>SO</th> 
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach($thesauruses as $key=>$thesaurus)
+                                <tr>
+                                    <td class="text-center">
+                                        <a href="{{ route('admin.hierarchy.enableword', $thesaurus->id) }}" class="btn btn-info waves-effect">
+                                            <i class="material-icons">check</i>Activate
+                                        </a> 
+                                        <button class="btn btn-success waves-effect" type="button" onclick="enableThesaurus({{ $thesaurus->id }})">                                
+                                            <i class="material-icons">check</i>Activate
+                                        </button>
+                                        <form id="enableword-form-{{ $thesaurus->id }}" action="{{ route('admin.hierarchy.enableword', $thesaurus->id) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('GET')
+                                        </form>
+                                    </td>
+                                    <td>{{ $thesaurus->id  }}</td>
+                                    <td>{{ $thesaurus->mt }}</td>
+                                    <td>{{ $thesaurus->sn }}</td>
+                                    <td>{{ $thesaurus->uf  }}</td>
+                                    <td>{{ $thesaurus->use  }}</td>
+                                    <td>{{ $thesaurus->bt }}</td>
+                                    <td>{{ $thesaurus->nt  }}</td>
+                                    <td>{{ $thesaurus->it  }}</td>
+                                    <td>{{ $thesaurus->so  }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Exportable Table -->
+    
+    
+</div>
+@endsection
+
+@push('js')
+
+
+        <!-- Jquery DataTable Plugin Js -->
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/jquery.dataTables.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/buttons.flash.min.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/jszip.min.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/pdfmake.min.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/vfs_fonts.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/buttons.html5.min.js') }}"></script>
+        <script src="{{ asset('assets/backend/plugins/jquery-datatable/extensions/export/buttons.print.min.js') }}"></script>
+        
+        <script src="{{ asset('assets/backend/js/pages/tables/jquery-datatable.js') }}"></script>
+        <script src="https://unpkg.com/sweetalert2@7.19.1/dist/sweetalert2.all.js"></script>
+        <script type="text/javascript">
+            function enableThesaurus(id){
+                const swalWithBootstrapButtons = swal.mixin({
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    })
+
+                    swalWithBootstrapButtons({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, enable it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                    }).then((result) => {
+                    if (result.value) {
+                        event.preventDefault();
+                        document.getElementById('enableword-form-'+id).submit();
+                    } else if (
+                        // Read more about handling dismissals
+                        result.dismiss === swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons(
+                        'Cancelled',
+                        'Your data is safe :)',
+                        'error'
+                        )
+                    }
+                })
+            }
+        </script>
+
+@endpush
+

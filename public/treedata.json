@@ -1,0 +1,19 @@
+{
+    "name": "Main Term",
+    "children": [
+        {
+            "name": "Narrow Term",
+            "children":[
+                {"name": "Broader Term"},
+                {"name": "Indonesian Term"}
+            ]
+        },
+        {
+            "name": "Scope Note",
+            "children":[
+                {"name": "Use", "size":3534},
+                {"name": "Use For", "size":5731}             
+            ]
+        }
+    ]
+}
